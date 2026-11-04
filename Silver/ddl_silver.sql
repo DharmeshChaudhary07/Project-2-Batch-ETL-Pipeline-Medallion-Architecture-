@@ -20,10 +20,10 @@ drop table if exists silver_customers;
 
 -- create a table with actual data type
 create table silver_customers (
-  customer_id        VARCHAR(40) primary key,
-  customer_unique_id VARCHAR(40),
-  zip_code_prefix    VARCHAR(10),
-  city               VARCHAR(100),
+  customer_id        varchar(40) primary key,
+  customer_unique_id varchar(40),
+  zip_code_prefix    varchar(10),
+  city               varchar(100),
   state              CHAR(2)
 );
 
@@ -81,6 +81,61 @@ create table silver_order_reviews(
   review_score 				int,
   review_comment_title 		text, 
   review_comment_message 	text,
-  review_creation_ts 		timestamp , 
-  review_answer_ts 			timestamp ,
-  PRIMARY KEY (review_id, order_id));
+  review_creation_date 		timestamp , 
+  review_answer_date		timestamp ,
+  primary key (review_id, order_id)
+);
+
+
+
+-- Drop if already exists
+drop table if exists silver_orders;
+-- create a table with actual datatype
+create table silver_orders(
+	order_id varchar(40) PRIMARY KEY,
+  	customer_id varchar(40) NOT NULL,
+  	order_status varchar(20),
+  	order_purchase_ts timestamp,
+  	order_approved_ts timestamp ,
+ 	order_delivered_carrier_ts timestamp ,
+  	order_delivered_customer_ts timestamp ,
+  	order_estimated_delivery_ts timestamp
+);
+
+
+
+-- Drop if already exists
+drop table if exists silver_products;
+-- create a table with actual datatype
+create table silver_products(
+	product_id varchar(40) PRIMARY KEY,
+  	category_name_pt varchar(100),
+ 	category_name_en varchar(100),			--extra column
+ 	name_length int,
+ 	description_length int, 
+ 	photos_qty int,
+ 	weight_g int, 
+	length_cm int, 
+	height_cm int,
+	width_cm int
+);
+
+
+
+-- Drop if already exists
+drop table if exists silver_sellers;
+-- create a table with actual datatype
+create table silver_sellers(
+  	seller_id varchar(40) primary key ,
+ 	zip_code_prefix varchar(10),
+  	city varchar(100), 
+	state char(2)
+);
+
+
+/*
+don’t need a category translation table: it’s only a 71-row lookup (Portuguese name → English name).
+The only job it has is to give each product an English category, and your silver_products table already has that column 
+(category_name_en, your “extra column”). The cleaning script gets the value with a LEFT JOIN straight from bronze_category_translation.
+*/
+
