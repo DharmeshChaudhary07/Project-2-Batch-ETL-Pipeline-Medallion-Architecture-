@@ -8,10 +8,10 @@
 ---------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------
 
--- create bronze_customers
+-- create bronze.customers
 
 
-create table if not exists bronze_customers (
+create table if not exists bronze.customers (
 customer_id text, 
 customer_unique_id text, 
 customer_zip_code_prefix text, 
@@ -20,9 +20,9 @@ customer_state text
 );
 
 
--- Create bronze_geolocation
+-- Create bronze.geolocation
 
-create table if not exists bronze_geolocation (
+create table if not exists bronze.geolocation (
 geolocation_zip_code_prefix text,
 geolocation_lat text,
 geolocation_lng text,
@@ -31,9 +31,9 @@ geolocation_state text
 );
 
 
--- Create bronze_order_items
+-- Create bronze.order_items
 
-CREATE TABLE IF NOT EXISTS bronze_order_items (
+CREATE TABLE IF NOT EXISTS bronze.order_items (
 order_id TEXT, 
 order_item_id TEXT, 
 product_id TEXT, 
@@ -43,9 +43,9 @@ price TEXT,
 freight_value TEXT);
 
 
--- Create bronze_order_payements
+-- Create bronze.order_payements
 
-CREATE TABLE IF NOT EXISTS bronze_order_payments (
+CREATE TABLE IF NOT EXISTS bronze.order_payments (
 order_id TEXT, 
 payment_sequential TEXT, 
 payment_type TEXT,
@@ -53,9 +53,9 @@ payment_installments TEXT,
 payment_value TEXT);
 
 
--- Create bronze_order_reviews
+-- Create bronze.order_reviews
 
-CREATE TABLE IF NOT EXISTS bronze_order_reviews (
+CREATE TABLE IF NOT EXISTS bronze.order_reviews (
 review_id TEXT, 
 order_id TEXT, 
 review_score TEXT, 
@@ -65,9 +65,9 @@ review_creation_date TEXT,
 review_answer_timestamp TEXT);
 
 
--- Create bronze_orders
+-- Create bronze.orders
 
-CREATE TABLE IF NOT EXISTS bronze_orders (
+CREATE TABLE IF NOT EXISTS bronze.orders (
 order_id TEXT, 
 customer_id TEXT, 
 order_status TEXT, 
@@ -78,9 +78,9 @@ order_delivered_customer_date TEXT,
 order_estimated_delivery_date TEXT);
 
 
--- Create bronze_products
+-- Create bronze.products
 
-CREATE TABLE IF NOT EXISTS bronze_products (
+CREATE TABLE IF NOT EXISTS bronze.products (
 product_id TEXT, 
 product_category_name TEXT, 
 product_name_lenght TEXT,
@@ -92,18 +92,18 @@ product_height_cm TEXT,
 product_width_cm TEXT);
 
 
--- Create bronze_sellers
+-- Create bronze.sellers
 
-CREATE TABLE IF NOT EXISTS bronze_sellers (
+CREATE TABLE IF NOT EXISTS bronze.sellers (
 seller_id TEXT,
 seller_zip_code_prefix TEXT, 
 seller_city TEXT, 
 seller_state TEXT);
 
 
--- Create bronze_category_translation
+-- Create bronze.category_translation
 
-CREATE TABLE IF NOT EXISTS bronze_category_translation (
+CREATE TABLE IF NOT EXISTS bronze.category_translation (
 product_category_name TEXT, 
 product_category_name_english TEXT);
 
