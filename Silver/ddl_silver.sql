@@ -16,10 +16,10 @@ Script Purpose:
 ------------------------------------------------------------------------------------------------------------------------
 
 -- Drop if already exists
-drop table if exists silver_customers;
+drop table if exists silver.customers;
 
 -- create a table with actual data type
-create table silver_customers (
+create table silver.customers (
   customer_id        varchar(40) primary key,
   customer_unique_id varchar(40),
   zip_code_prefix    varchar(10),
@@ -30,9 +30,9 @@ create table silver_customers (
 
 
 -- Drop if already exists
-drop table if exists silver_geolocation;
+drop table if exists silver.geolocation;
 -- create a table with actual data type
-create table silver_geolocation (
+create table silver.geolocation (
 	zip_code_prefix  	varchar(10) primary key,
 	latitude      		numeric(12,8),
 	longitude      		numeric(12,8),
@@ -43,9 +43,9 @@ create table silver_geolocation (
 
 
 -- Drop if already exists
-drop table if exists silver_order_items;
+drop table if exists silver.order_items;
 -- create a table with actual datatype 
-create table silver_order_items(
+create table silver.order_items(
 	order_id 		varchar(40),
 	order_item_id 	int,
 	product_id 		varchar(40),
@@ -59,9 +59,9 @@ create table silver_order_items(
 
 
 -- Drop if already exists
-drop table if exists silver_order_payments;
+drop table if exists silver.order_payments;
 -- create a table with actual datatype
-create table silver_order_payments(
+create table silver.order_payments(
 	order_id 				varchar(40),
 	payment_sequential 		int,
  	payment_type 			varchar(30),
@@ -73,9 +73,9 @@ create table silver_order_payments(
 
 
 -- Drop if already exists
-drop table if exists silver_order_reviews;
+drop table if exists silver.order_reviews;
 -- create a table with actual datatype
-create table silver_order_reviews(
+create table silver.order_reviews(
   review_id 				varchar(40),
   order_id 					varchar(40),
   review_score 				int,
@@ -89,9 +89,9 @@ create table silver_order_reviews(
 
 
 -- Drop if already exists
-drop table if exists silver_orders;
+drop table if exists silver.orders;
 -- create a table with actual datatype
-create table silver_orders(
+create table silver.orders(
 	order_id varchar(40) PRIMARY KEY,
   	customer_id varchar(40) NOT NULL,
   	order_status varchar(20),
@@ -105,9 +105,9 @@ create table silver_orders(
 
 
 -- Drop if already exists
-drop table if exists silver_products;
+drop table if exists silver.products;
 -- create a table with actual datatype
-create table silver_products(
+create table silver.products(
 	product_id varchar(40) PRIMARY KEY,
   	category_name_pt varchar(100),
  	category_name_en varchar(100),			--extra column
@@ -123,9 +123,9 @@ create table silver_products(
 
 
 -- Drop if already exists
-drop table if exists silver_sellers;
+drop table if exists silver.sellers;
 -- create a table with actual datatype
-create table silver_sellers(
+create table silver.sellers(
   	seller_id varchar(40) primary key ,
  	zip_code_prefix varchar(10),
   	city varchar(100), 
@@ -135,7 +135,7 @@ create table silver_sellers(
 
 /*
 don’t need a category translation table: it’s only a 71-row lookup (Portuguese name → English name).
-The only job it has is to give each product an English category, and your silver_products table already has that column 
+The only job it has is to give each product an English category, and your silver.products table already has that column 
 (category_name_en, your “extra column”). The cleaning script gets the value with a LEFT JOIN straight from bronze_category_translation.
 */
 
