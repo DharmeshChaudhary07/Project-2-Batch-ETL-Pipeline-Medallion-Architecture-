@@ -1,7 +1,21 @@
 ------------------------------------------------------------------------------------------------------------------------
 											-- Cleaning data
+
+/*
+ The script below is cleaning the tables from bronze layer and loading it into the new silver table.
+ 		Keywords used below:- 
+ 						TRUNCATE, 
+ 						INSERT INTO, 
+ 						BEGIN;/COMMIT; (If the insert fails, Postgres rolls back everything, including the truncate, and silver keeps 
+ 										its old data.)
+ 						Basics like trim, UPPER, LOWER, nullif
+ */
 ------------------------------------------------------------------------------------------------------------------------
 
+
+--Cleaning the table customers from bronze layer and loading it into silver table.
+--------------------------------------------------------------------------------------------
+begin;
 
 -- remove/clear data from silver.customers, keeping the table format.
 truncate silver.customers;
@@ -9,12 +23,32 @@ truncate silver.customers;
 insert into silver.customers (customer_id, customer_unique_id, zip_code_prefix, city, state)
 
 select 
-	trim(customer_id),
-	trim(customer_unique_id),
-	trim(customer_zip_code_prefix),
-	lower(trim(customer_city)),
-	upper(trim(customer_state))
-from bronze.customers
-where customer_id is not null 
-		and TRIM(customer_id) != '';
+    customer_id,
+    customer_unique_id,
+    customer_zip_code_prefix,
+    customer_city,
+    customer_state
+from(
+    select 
+        nullif(trim(customer_id), '')                      AS customer_id,
+        nullif(trim(customer_unique_id), '')               AS customer_unique_id,
+        nullif(trim(customer_zip_code_prefix), '')         AS customer_zip_code_prefix,
+        lower(nullif(trim(customer_city), ''))             AS customer_city,
+        upper(nullif(trim(customer_state), ''))            AS customer_state,
+        row_number() over (
+            partition by nullif(trim(customer_id), '')
+            order by customer_id
+        ) as rn
+    from bronze.customers
+) t
+where rn = 1
+  and customer_id is not null 
+  and customer_unique_id is not null;
+
+commit;
+--------------------------------------------------------------------------------------------
+
+
+----Cleaning the table customers from bronze layer and loading it into silver table.
+
 
