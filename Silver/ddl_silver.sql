@@ -20,11 +20,12 @@ drop table if exists silver.customers;
 
 -- create a table with actual data type
 create table silver.customers (
-  customer_id        varchar(40) primary key,
-  customer_unique_id varchar(40),
-  zip_code_prefix    varchar(10),
+  customer_id        varchar(40) not null primary key,
+  customer_unique_id varchar(40) not null,
+  zip_code_prefix    varchar(10) not null,
   city               varchar(100),
-  state              CHAR(2)
+  state              CHAR(2),
+  dwh_load_ts		 timestamp default  current_timestamp
 );
 
 
@@ -33,11 +34,12 @@ create table silver.customers (
 drop table if exists silver.geolocation;
 -- create a table with actual data type
 create table silver.geolocation (
-	zip_code_prefix  	varchar(10) primary key,
-	latitude      		numeric(12,8),
-	longitude      		numeric(12,8),
+	zip_code_prefix  	varchar(10) not null,
+	latitude      		numeric(12,8) not null,
+	longitude      		numeric(12,8) not null,
 	city 				varchar(100),
-	state   			char(2)
+	state   			char(2),
+	dwh_load_ts        timestamp default  current_timestamp
 );
 
 
@@ -46,13 +48,14 @@ create table silver.geolocation (
 drop table if exists silver.order_items;
 -- create a table with actual datatype 
 create table silver.order_items(
-	order_id 		varchar(40),
-	order_item_id 	int,
-	product_id 		varchar(40),
-	seller_id   	varchar(40),
-	shipping_limit_date  timestamp,
-	price 			numeric(10,2),
-	freight_value  	numeric(10,2),
+	order_id 		varchar(40) not null,
+	order_item_id 	int not null,
+	product_id 		varchar(40) not null,
+	seller_id   	varchar(40) not null,
+	shipping_limit_date  timestamp not null,
+	price 			numeric(10,2) not null,
+	freight_value  	numeric(10,2) not null,
+	dwh_load_ts        timestamp default  current_timestamp,
 	primary key (order_id, order_item_id)
 );
 
@@ -67,6 +70,7 @@ create table silver.order_payments(
  	payment_type 			varchar(30),
   	payment_installments 	int,
   	payment_value 			numeric(10,2),
+  	dwh_load_ts        timestamp default  current_timestamp,
   	primary key (order_id, payment_sequential)	
 );
 
@@ -83,6 +87,7 @@ create table silver.order_reviews(
   review_comment_message 	text,
   review_creation_date 		timestamp , 
   review_answer_date		timestamp ,
+  dwh_load_ts        timestamp default  current_timestamp,
   primary key (review_id, order_id)
 );
 
@@ -99,7 +104,8 @@ create table silver.orders(
   	order_approved_ts timestamp ,
  	order_delivered_carrier_ts timestamp ,
   	order_delivered_customer_ts timestamp ,
-  	order_estimated_delivery_ts timestamp
+  	order_estimated_delivery_ts timestamp,
+  	dwh_load_ts        timestamp default  current_timestamp
 );
 
 
@@ -117,7 +123,8 @@ create table silver.products(
  	weight_g int, 
 	length_cm int, 
 	height_cm int,
-	width_cm int
+	width_cm int,
+	dwh_load_ts        timestamp default  current_timestamp
 );
 
 
@@ -129,7 +136,8 @@ create table silver.sellers(
   	seller_id varchar(40) primary key ,
  	zip_code_prefix varchar(10),
   	city varchar(100), 
-	state char(2)
+	state char(2),
+	dwh_load_ts        timestamp default  current_timestamp
 );
 
 
