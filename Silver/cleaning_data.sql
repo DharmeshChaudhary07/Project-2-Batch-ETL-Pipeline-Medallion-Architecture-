@@ -70,10 +70,30 @@ where nullif(trim(geolocation_zip_code_prefix),'') is not null
 
 commit;
 
+--------------------------------------------------------------------------------------------
 
+----Cleaning the table geolocation from bronze layer and loading it into silver table.
 
+begin;
 
+-- remove/clear data from silver.customers, keeping the table format.
+truncate silver.order_items;
 
+insert into silver.order_items (order_id, order_item_id, product_id, seller_id, shipping_limit_date, price, freight_value) 
+
+select 
+	nullif(trim(order_id),''),
+	nullif(trim(order_item_id),'')::int,
+	nullif(trim(product_id ),''),
+	nullif(trim(seller_id ),''),
+	nullif(trim(shipping_limit_date ),'')::timestamp,
+	nullif(trim(price),'')::numeric(10,2),
+	nullif(trim(freight_value),'')::numeric(10,2)
+from bronze.order_items 
+where nullif(trim(order_id), '') is not null
+  and nullif(trim(order_item_id), '') is not null
+
+commit;
 
 
 
