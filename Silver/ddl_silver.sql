@@ -65,11 +65,11 @@ create table silver.order_items(
 drop table if exists silver.order_payments;
 -- create a table with actual datatype
 create table silver.order_payments(
-	order_id 				varchar(40),
-	payment_sequential 		int,
- 	payment_type 			varchar(30),
+	order_id 				varchar(40) not null,
+	payment_sequential 		int not null,
+ 	payment_type 			varchar(30) not null,
   	payment_installments 	int,
-  	payment_value 			numeric(10,2),
+  	payment_value 			numeric(10,2) not null,
   	dwh_load_ts        timestamp default  current_timestamp,
   	primary key (order_id, payment_sequential)	
 );
