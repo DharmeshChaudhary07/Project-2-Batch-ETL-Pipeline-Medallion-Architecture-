@@ -159,6 +159,36 @@ select count(*) from silver.order_reviews t ;
 
 
 
+-----------------------------------------------
+
+------ orders
+
+
+
+  select count(*) from bronze.orders ;
+  select count(*) from silver.orders ;
+  
+-- status values that exist
+  
+select order_status, count(*) from silver.orders group by order_status  order by count(*) desc;
+
+
+
+-- delivered before purchased (impossible)
+select count(*) from silver.orders
+where order_delivered_customer_ts < order_purchase_ts;
+
+
+-- delivered orders with no delivery date
+
+select count(*) from silver.orders
+where order_status = 'delivered' and order_delivered_customer_ts is null;
+
+-- orphan customers, run after silver.customers is loaded
+select count(*) from silver.orders o
+left join silver.customers c on o.customer_id = c.customer_id
+where c.customer_id is null;
+
 
 
 
