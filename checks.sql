@@ -138,3 +138,40 @@ SELECT COUNT(*) FROM silver.order_payments WHERE payment_value <= 0;
 SELECT payment_type, COUNT(*) FROM silver.order_payments GROUP BY 1;
 
 
+-----------------------------------------------
+
+------ order_reviews
+
+select * from bronze.order_reviews t limit 300;
+
+-- reviews answered before they were created
+SELECT COUNT(*) FROM silver.order_reviews
+WHERE review_answer_date < review_creation_date;
+
+SELECT review_score, COUNT(*) FROM silver.order_reviews GROUP BY 1 ORDER BY 1;
+
+SELECT COUNT(*) FROM bronze.order_reviews
+WHERE review_score NOT IN ('1','2','3','4','5') OR review_score IS NULL;
+
+
+select count(*) from bronze.order_reviews t ;
+select count(*) from silver.order_reviews t ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
