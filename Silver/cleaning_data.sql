@@ -123,7 +123,6 @@ where nullif(trim(order_id), '') is not null
 commit;
 
 
-
 --------------------------------------------------------------------------------------------
 
 ----Cleaning the table order_reviews from bronze layer and loading it into silver table.
@@ -133,46 +132,54 @@ begin;
 -- remove/clear data from silver.order_reviews, keeping the table format.
 truncate silver.order_reviews;
 
-INSERT INTO silver.order_reviews
+insert into silver.order_reviews
     (review_id, order_id, review_score, review_comment_title,
      review_comment_message, review_creation_date, review_answer_date)
-SELECT
-    review_id,
-    order_id,
-    review_score,
-    review_comment_title,
-    review_comment_message,
-    review_creation_date,
-    review_answer_timestamp
-FROM (
-    SELECT
-        nullif(trim(review_id), '')   as review_id,                                           
-        nullif(trim(order_id), '')    as order_id,                                     
-        nullif(trim(review_score), '')::INT  as review_score,                        
-        nullif(trim(REGEXP_REPLACE(review_comment_title, '\s+', ' ', 'g')), '')  as review_comment_title,  
-        nullif(trim(REGEXP_REPLACE(review_comment_message, '\s+', ' ', 'g')), '')  as review_comment_message,
-        nullif(trim(review_creation_date), '')::timestamp as review_creation_date,               
-        nullif(trim(review_answer_timestamp), '')::timestamp as review_answer_timestamp,                
-        row_number() over (
-            partition by nullif(trim(review_id), ''), nullif(trim(order_id), '')
-            order by review_answer_timestamp desc
-        ) AS rn
-    from bronze.order_reviews
-) t
-where rn = 1
-  and review_id is not null
-  and order_id is not null
-  and review_score between 1 and 5;
-
+select
+    nullif(trim(review_id), ''),
+    nullif(trim(order_id), ''),
+    nullif(trim(review_score), '')::smallint,
+    nullif(trim(regexp_replace(review_comment_title, '\s+', ' ', 'g')), ''),
+    nullif(trim(regexp_replace(review_comment_message, '\s+', ' ', 'g')), ''),
+    nullif(trim(review_creation_date), '')::timestamp,
+    nullif(trim(review_answer_timestamp), '')::timestamp
+from bronze.order_reviews
+where nullif(trim(review_id), '') is not null
+  and nullif(trim(order_id), '') is not null
+  and nullif(trim(review_score), '')::smallint between 1 and 5;
 
 commit;
 
 
+--------------------------------------------------------------------------------------------
 
+----Cleaning the table orders from bronze layer and loading it into silver table.
 
+begin;
 
+-- remove/clear data from silver.orders, keeping the table format.
+truncate silver.orders;
 
+insert into silver.orders (
+    order_id, customer_id, order_status, order_purchase_ts,
+    order_approved_ts, order_delivered_carrier_ts,
+    order_delivered_customer_ts, order_estimated_delivery_ts)
+    
+select
+    nullif(trim(order_id), ''),
+    nullif(trim(customer_id), ''),
+    lower(nullif(trim(order_status), '')),
+    nullif(trim(order_purchase_timestamp), '')::timestamp,
+    nullif(trim(order_approved_at), '')::timestamp,
+    nullif(trim(order_delivered_carrier_date), '')::timestamp,
+    nullif(trim(order_delivered_customer_date), '')::timestamp,
+    nullif(trim(order_estimated_delivery_date), '')::timestamp
+from bronze.orders
+where nullif(trim(order_id), '') is not null
+  and nullif(trim(customer_id), '') is not null
+  and nullif(trim(order_status), '') is not null;
 
+commit;
 
 
 
