@@ -80,9 +80,9 @@ create table silver.order_payments(
 drop table if exists silver.order_reviews;
 -- create a table with actual datatype
 create table silver.order_reviews(
-  review_id 				varchar(40),
-  order_id 					varchar(40),
-  review_score 				int,
+  review_id 				varchar(40) not null,
+  order_id 					varchar(40) not null,
+  review_score 				int not null, 
   review_comment_title 		text, 
   review_comment_message 	text,
   review_creation_date 		timestamp , 
