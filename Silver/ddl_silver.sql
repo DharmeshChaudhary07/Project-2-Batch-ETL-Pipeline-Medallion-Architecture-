@@ -97,9 +97,9 @@ create table silver.order_reviews(
 drop table if exists silver.orders;
 -- create a table with actual datatype
 create table silver.orders(
-	order_id varchar(40) PRIMARY KEY,
-  	customer_id varchar(40) NOT NULL,
-  	order_status varchar(20),
+	order_id varchar(40) primary key,
+  	customer_id varchar(40) not null, 
+  	order_status varchar(20) not null,
   	order_purchase_ts timestamp,
   	order_approved_ts timestamp ,
  	order_delivered_carrier_ts timestamp ,
