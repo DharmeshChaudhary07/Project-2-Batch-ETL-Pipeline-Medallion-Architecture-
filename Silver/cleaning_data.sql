@@ -182,6 +182,44 @@ where nullif(trim(order_id), '') is not null
 commit;
 
 
+--------------------------------------------------------------------------------------------
+
+----Cleaning the table products from bronze layer and loading it into silver table.
+
+begin;
+
+-- remove/clear data from silver.orders, keeping the table format.
+truncate silver.products;
+
+insert into silver.products (
+	product_id, category_name_pt, category_name_en, name_length,
+ 	description_length, photos_qty, weight_g, length_cm, height_cm, width_cm)
+ 	
+select
+    nullif(trim(product_id), ''),
+    lower(nullif(trim(p.product_category_name), '')),
+    coalesce(
+        lower(nullif(trim(t.product_category_name_english), '')),
+        lower(nullif(trim(p.product_category_name), '')),
+        'unknown'
+    ),
+    nullif(trim(product_name_lenght), '')::numeric::int,
+    nullif(trim(product_description_lenght), '')::numeric::int,
+    nullif(trim(product_photos_qty), '')::numeric::int,
+    nullif(trim(product_weight_g), '')::numeric::int,
+    nullif(trim(product_length_cm), '')::numeric::int,
+    nullif(trim(product_height_cm), '')::numeric::int,
+    nullif(trim(product_width_cm), '')::numeric::int
+from bronze.products p
+left join bronze.category_translation t
+on lower(trim(p.product_category_name)) = lower(trim(t.product_category_name))
+where nullif(trim(p.product_id), '') is not null;
+
+commit;
+
+-- used ::numeric::int kust to be sure that column doesnot have decimal places. is the text like 40.0 cannot convert directly to int
+
+rollback ;
 
 
 
