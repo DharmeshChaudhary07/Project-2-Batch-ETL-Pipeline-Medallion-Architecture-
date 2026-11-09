@@ -198,11 +198,17 @@ insert into silver.products (
 select
     nullif(trim(product_id), ''),
     lower(nullif(trim(p.product_category_name), '')),
-    coalesce(
-        lower(nullif(trim(t.product_category_name_english), '')),
-        lower(nullif(trim(p.product_category_name), '')),
-        'unknown'
-    ),
+    case
+        when lower(trim(p.product_category_name)) = 'pc_gamer'
+            then 'pc_gamer'
+        when lower(trim(p.product_category_name)) = 'portateis_cozinha_e_preparadores_de_alimentos'
+            then 'portable_kitchen_and_food_preparers'
+        else coalesce(
+            lower(nullif(trim(t.product_category_name_english), '')),
+            lower(nullif(trim(p.product_category_name), '')),
+            'unknown'
+        )
+    end,
     nullif(trim(product_name_lenght), '')::numeric::int,
     nullif(trim(product_description_lenght), '')::numeric::int,
     nullif(trim(product_photos_qty), '')::numeric::int,
@@ -219,7 +225,8 @@ commit;
 
 -- used ::numeric::int kust to be sure that column doesnot have decimal places. is the text like 40.0 cannot convert directly to int
 
-rollback ;
+--------------------------------------------------------------------------------------------
 
+----Cleaning the table products from bronze layer and loading it into silver table.
 
 
