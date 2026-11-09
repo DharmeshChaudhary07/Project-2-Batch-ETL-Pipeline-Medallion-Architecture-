@@ -190,11 +190,37 @@ left join silver.customers c on o.customer_id = c.customer_id
 where c.customer_id is null;
 
 
+-----------------------------------------------
+
+------ products
+
+select * from bronze.products p limit 100;
+
+select * from bronze.products p where p.product_height_cm like '%' limit 110; 
+
+select * from bronze.products where product_category_name is null ;
+
+select count(*) from silver.products where category_name_en = 'unknown';
+
+select * from silver.products   -- only weight is 0 
+where weight_g <= 0 or length_cm <= 0 or height_cm <= 0 or width_cm <= 0;
+
+select count(*) from bronze.products p;
+select count(*) from silver.products p;
 
 
+select distinct category_name_pt
+from silver.products
+where category_name_pt = category_name_en;
 
+select category_name_pt, category_name_en, count(*)
+from silver.products
+where category_name_pt in ('pc_gamer', 'portateis_cozinha_e_preparadores_de_alimentos')
+group by category_name_pt , category_name_en ;
 
+-----------------------------------------------
 
+------ seller
 
 
 
