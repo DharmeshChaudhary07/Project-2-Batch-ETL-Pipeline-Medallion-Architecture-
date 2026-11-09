@@ -218,16 +218,21 @@ from silver.products
 where category_name_pt in ('pc_gamer', 'portateis_cozinha_e_preparadores_de_alimentos')
 group by category_name_pt , category_name_en ;
 
+
 -----------------------------------------------
 
------- seller
+------ sellers
 
+select count(*) from bronze.sellers s;
+select count(*) from silver.sellers s;
 
+select length(zip_code_prefix), count(*) from silver.sellers group by length(zip_code_prefix);
 
+select length(state), count(*) from silver.sellers group by length(state);
 
+select city, count(*) from silver.sellers
+where city ~ '[^a-zçãõáéíóúâêôà ]'
+group by city
+order by city;
 
-
-
-
-
-
+-----------------------------------------------
