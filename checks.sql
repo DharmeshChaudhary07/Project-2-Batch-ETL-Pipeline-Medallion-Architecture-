@@ -66,7 +66,7 @@ select * from bronze.customers c where c.customer_id  is null ;
 select count(*) as bronze from bronze.customers c ;
 select count(*) as silver from silver.customers v;
 
-select * from silver.customers c limit 100;
+select c.customer_unique_id , count(*) from silver.customers c group by c.customer_unique_id having count(*) > 1 limit 100;
 
 -----------------------------------------------
 
@@ -163,15 +163,15 @@ select count(*) from silver.order_reviews t ;
 
 ------ orders
 
+select * from bronze.orders limit 100;
+select * from silver.orders limit 100;
 
-
-  select count(*) from bronze.orders ;
-  select count(*) from silver.orders ;
+select count(*) from bronze.orders ;
+select count(*) from silver.orders ;
   
 -- status values that exist
   
 select order_status, count(*) from silver.orders group by order_status  order by count(*) desc;
-
 
 
 -- delivered before purchased (impossible)
@@ -188,6 +188,7 @@ where order_status = 'delivered' and order_delivered_customer_ts is null;
 select count(*) from silver.orders o
 left join silver.customers c on o.customer_id = c.customer_id
 where c.customer_id is null;
+
 
 
 -----------------------------------------------
