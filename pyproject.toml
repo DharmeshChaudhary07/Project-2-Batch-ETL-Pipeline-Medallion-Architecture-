@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "olist-etl"
+version = "0.1.0"
+description = "Batch ETL pipeline (bronze/silver/gold) for the Olist dataset"
+requires-python = ">=3.9"
+dependencies = ["psycopg2-binary", "python-dotenv"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
