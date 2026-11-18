@@ -15,10 +15,15 @@ gold.gold_dim_date restart identity cascade;
 -- upto 2030 (total rows would be 5500) it wont table much space even less than 1 mb. also future planningit best.
 
 insert into gold.gold_dim_date
-select to_char(d,'yyyymmdd')::int, d,
-       extract(year from d), extract(quarter from d), extract(month from d),
-       to_char(d,'month'), extract(day from d),
-       extract(isodow from d), to_char(d,'day'),
+select to_char(d,'yyyymmdd')::int, 		-- surrogate key
+	   d,
+       extract(year from d), 
+       extract(quarter from d), 
+       extract(month from d),
+       to_char(d,'month'), 
+       extract(day from d),
+       extract(isodow from d),
+       to_char(d,'day'),
        extract(isodow from d) in (6,7)
 from generate_series('2016-01-01'::date, '2030-12-31'::date, '1 day') as d;
 
