@@ -24,18 +24,18 @@ create table gold.gold_dim_customers (
   customer_key       int generated always as identity primary key,
   customer_id        text not null unique,
   customer_unique_id text not null,
-  city text, 
-  state text, 
-  zip_code_prefix text
+  customer_city text, 
+  customer_state text, 
+  customer_zip_code_prefix text
 );
 
 
 create table gold.gold_dim_sellers (
   seller_key int generated always as identity primary key,
   seller_id  text not null unique,
-  city text, 
-  state text, 
-  zip_code_prefix text
+  seller_city text, 
+  seller_state text, 
+  seller_zip_code_prefix text
 );
 
 
