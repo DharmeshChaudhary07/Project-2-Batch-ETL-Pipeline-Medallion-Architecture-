@@ -29,33 +29,38 @@ from generate_series('2016-01-01'::date, '2030-12-31'::date, '1 day') as d;
 
 ----------------------------------------
 
+insert into gold.gold_dim_customers (customer_id, customer_unique_id, customer_city, customer_state, customer_zip_code_prefix)
 
-insert into gold_dim_customers (customer_id, customer_unique_id, city, state, zip_code_prefix)
+select customer_id, 
+	customer_unique_id,
+	city, 
+	state, 
+	zip_code_prefix
+from silver.customers;
 
-select customer_id, customer_unique_id, customer_city, customer_state, customer_zip_code_prefix
-from silver_customers;
+----------------------------------------
+
+
+insert into gold.gold_dim_sellers (seller_id, seller_city, seller_state, seller_zip_code_prefix)
+select seller_id, 
+	city, 
+	state,
+	zip_code_prefix
+from silver.sellers;
 
 
 ----------------------------------------
 
 
-insert into gold_dim_sellers (seller_id, city, state, zip_code_prefix)
-select seller_id, seller_city, seller_state, seller_zip_code_prefix
-from silver_sellers;
-
-
-----------------------------------------
-
-
-insert into gold_dim_products (product_id, category_pt, category_en,
-                               weight_g, length_cm, height_cm, width_cm)
-select p.product_id, p.product_category_name,
-       coalesce(t.product_category_name_english, 'unknown'),
-       p.product_weight_g, p.product_length_cm, p.product_height_cm, p.product_width_cm
-from silver_products p
-left join silver_product_category_translation t
-  on p.product_category_name = t.product_category_name;
-
+insert into gold.gold_dim_products (product_id, category_pt, category_en, weight_g, length_cm, height_cm, width_cm)
+select product_id,
+	category_name_pt,
+	coalesce(category_name_en, 'unknown'),
+    weight_g, 
+    length_cm, 
+    height_cm, 
+    width_cm
+from silver.products 
 
 ----------------------------------------
 
