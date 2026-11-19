@@ -20,10 +20,10 @@ select to_char(d,'yyyymmdd')::int, 		-- surrogate key
        extract(year from d), 
        extract(quarter from d), 
        extract(month from d),
-       to_char(d,'month'), 
+       to_char(d,'fmmonth'), 
        extract(day from d),
        extract(isodow from d),
-       to_char(d,'day'),
+       to_char(d,'fmday'),
        extract(isodow from d) in (6,7)
 from generate_series('2016-01-01'::date, '2030-12-31'::date, '1 day') as d;
 
