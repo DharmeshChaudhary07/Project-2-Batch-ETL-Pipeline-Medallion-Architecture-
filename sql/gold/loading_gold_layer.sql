@@ -65,34 +65,28 @@ from silver.products
 ----------------------------------------
 
 
-
-
 insert into gold.gold_fact_sales (order_id, order_item_id, customer_key, product_key, seller_key, order_date_key, delivered_date_key,
 order_status , price ,freight_value, total_item_value, delivery_days, delivery_delay_days)
-  
-  
 
-select * from gold.gold_fact_sales gfs;
-
-select oi.order_id,
+select 
+	oi.order_id ,
 	oi.order_item_id,
-    c.customer_key,
+	c.customer_key,
     p.product_key,
     s.seller_key,
-    to_char(o.order_purchase_timestamp,'yyyymmdd')::int,
-    to_char(o.order_delivered_customer_date,'yyyymmdd')::int,
-    o.order_status,
-    oi.price,
-    oi.freight_value,
-    oi.price + oi.freight_value,
-    (o.order_delivered_customer_date::date - o.order_purchase_timestamp::date),
-    (o.order_delivered_customer_date::date - o.order_estimated_delivery_date::date)
-from silver_order_items oi
-join silver_orders o           on oi.order_id = o.order_id
-join gold_dim_customers c      on o.customer_id = c.customer_id
-join gold_dim_products p       on oi.product_id = p.product_id
-join gold_dim_sellers s        on oi.seller_id = s.seller_id;
-
+	to_char(o.order_purchase_ts, 'yyyymmdd')::int,
+	to_char(o.order_delivered_customer_ts, 'yyyymmdd')::int,
+	o.order_status,
+	oi.price,
+	oi.freight_value,
+	oi.price + oi.freight_value,
+	(o.order_delivered_customer_ts::date - o.order_purchase_ts::date),
+    (o.order_delivered_customer_ts::date - o.order_estimated_delivery_ts::date)
+from silver.order_items oi 
+join silver.orders o on oi.order_id = o.order_id 
+join gold.gold_dim_customers c      on o.customer_id = c.customer_id
+join gold.gold_dim_products p       on oi.product_id = p.product_id
+join gold.gold_dim_sellers s        on oi.seller_id = s.seller_id;
 
 ----------------------------------------
 
