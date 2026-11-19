@@ -30,7 +30,6 @@ from generate_series('2016-01-01'::date, '2030-12-31'::date, '1 day') as d;
 ----------------------------------------
 
 insert into gold.gold_dim_customers (customer_id, customer_unique_id, customer_city, customer_state, customer_zip_code_prefix)
-
 select customer_id, 
 	customer_unique_id,
 	city, 
@@ -42,7 +41,8 @@ from silver.customers;
 
 
 insert into gold.gold_dim_sellers (seller_id, seller_city, seller_state, seller_zip_code_prefix)
-select seller_id, 
+select
+	seller_id, 
 	city, 
 	state,
 	zip_code_prefix
@@ -60,14 +60,13 @@ select product_id,
     length_cm, 
     height_cm, 
     width_cm 
-from silver.products 
+from silver.products;
 
 ----------------------------------------
 
 
 insert into gold.gold_fact_sales (order_id, order_item_id, customer_key, product_key, seller_key, order_date_key, delivered_date_key,
 order_status , price ,freight_value, total_item_value, delivery_days, delivery_delay_days)
-
 select 
 	oi.order_id ,
 	oi.order_item_id,
