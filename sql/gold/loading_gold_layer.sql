@@ -59,21 +59,34 @@ select product_id,
     weight_g, 
     length_cm, 
     height_cm, 
-    width_cm
+    width_cm 
 from silver.products 
 
 ----------------------------------------
 
 
-insert into gold_fact_sales
-select oi.order_id, oi.order_item_id,
-       c.customer_key, p.product_key, s.seller_key,
-       to_char(o.order_purchase_timestamp,'yyyymmdd')::int,
-       to_char(o.order_delivered_customer_date,'yyyymmdd')::int,
-       o.order_status,
-       oi.price, oi.freight_value, oi.price + oi.freight_value,
-       (o.order_delivered_customer_date::date - o.order_purchase_timestamp::date),
-       (o.order_delivered_customer_date::date - o.order_estimated_delivery_date::date)
+
+
+insert into gold.gold_fact_sales (order_id, order_item_id, customer_key, product_key, seller_key, order_date_key, delivered_date_key,
+order_status , price ,freight_value, total_item_value, delivery_days, delivery_delay_days)
+  
+  
+
+select * from gold.gold_fact_sales gfs;
+
+select oi.order_id,
+	oi.order_item_id,
+    c.customer_key,
+    p.product_key,
+    s.seller_key,
+    to_char(o.order_purchase_timestamp,'yyyymmdd')::int,
+    to_char(o.order_delivered_customer_date,'yyyymmdd')::int,
+    o.order_status,
+    oi.price,
+    oi.freight_value,
+    oi.price + oi.freight_value,
+    (o.order_delivered_customer_date::date - o.order_purchase_timestamp::date),
+    (o.order_delivered_customer_date::date - o.order_estimated_delivery_date::date)
 from silver_order_items oi
 join silver_orders o           on oi.order_id = o.order_id
 join gold_dim_customers c      on o.customer_id = c.customer_id
@@ -84,13 +97,19 @@ join gold_dim_sellers s        on oi.seller_id = s.seller_id;
 ----------------------------------------
 
 
-insert into gold_fact_payments
-select op.order_id, op.payment_sequential, c.customer_key,
-       to_char(o.order_purchase_timestamp,'yyyymmdd')::int,
-       op.payment_type, op.payment_installments, op.payment_value
-from silver_order_payments op
-join silver_orders o      on op.order_id = o.order_id
-join gold_dim_customers c on o.customer_id = c.customer_id;
+insert into gold.gold_fact_payments (order_id, payment_sequential, customer_key, order_date_key, payment_type, installments, payment_value)
+select 
+	op.order_id ,
+	op.payment_sequential ,
+	gdc.customer_key ,
+	to_char(o.order_purchase_ts, 'yyyymmdd'):: int ,
+	op.payment_type ,
+	op.payment_installments ,
+	op.payment_value 
+from silver.order_payments op 
+join silver.orders o on o.order_id = op.order_id 
+join gold.gold_dim_customers gdc on gdc.customer_id = o.customer_id ;
+
 
 
 
