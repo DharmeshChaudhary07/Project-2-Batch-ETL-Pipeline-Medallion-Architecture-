@@ -51,4 +51,5 @@ def init_db():
                 cur.execute(f"create schema if not exists {schema}")
         run_sql_file(conn, SQL_DIR / "bronze" / "creating_bronze_table.sql")
         run_sql_file(conn, SQL_DIR / "silver" / "ddl_silver.sql")
+        run_sql_file(conn, SQL_DIR / "gold" / "create_gold_tables.sql")
     log.info("Schemas and tables created")
