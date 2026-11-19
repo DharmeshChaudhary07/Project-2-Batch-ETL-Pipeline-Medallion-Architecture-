@@ -3,7 +3,8 @@
     python main.py init     # create schemas + tables (drops silver tables!)
     python main.py bronze   # CSV -> bronze
     python main.py silver   # bronze -> silver
-    python main.py all      # bronze then silver
+    python main.py gold     # silver -> gold
+    python main.py all      # bronze then silver then gold
 """
 import argparse
 import sys
@@ -12,6 +13,7 @@ from olist_etl.bronze import load_bronze
 from olist_etl.db import init_db
 from olist_etl.logger import get_logger
 from olist_etl.silver import load_silver
+from olist_etl.gold import load_gold       
 
 log = get_logger("main")
 
@@ -19,7 +21,8 @@ COMMANDS = {
     "init": [init_db],
     "bronze": [load_bronze],
     "silver": [load_silver],
-    "all": [load_bronze, load_silver],
+    "gold": [load_gold],
+    "all": [load_bronze, load_silver,load_gold],
 }
 
 
